@@ -56,27 +56,8 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Force -Path extractor/src | Out-Null
-          @'
-          [package]
-          name = "extractor"
-          version = "0.1.0"
-          edition = "2021"
-
-          [dependencies]
-          zip = "=2.1.6"
-          '@ | Set-Content -Path extractor/Cargo.toml
-          @'
-          use std::fs::File;
-          fn main() {
-              let path = std::env::args().nth(1).unwrap();
-              let f = File::open(&path).unwrap();
-              let mut a = zip::ZipArchive::new(f).unwrap();
-              let tmp = std::env::temp_dir().join("wti-poc-extract");
-              std::fs::create_dir_all(&tmp).unwrap();
-              a.extract(&tmp).unwrap();
-              println!("EXTRACTED_TO={:?}", tmp);
-          }
-          '@ | Set-Content -Path extractor/src/main.rs
+          [IO.File]::WriteAllBytes("extractor/Cargo.toml", [Convert]::FromBase64String("W3BhY2thZ2VdCm5hbWUgPSAiZXh0cmFjdG9yIgp2ZXJzaW9uID0gIjAuMS4wIgplZGl0aW9uID0gIjIwMjEiCgpbZGVwZW5kZW5jaWVzXQp6aXAgPSAiPTIuMS42Igo="))
+          [IO.File]::WriteAllBytes("extractor/src/main.rs", [Convert]::FromBase64String("dXNlIHN0ZDo6ZnM6OkZpbGU7CmZuIG1haW4oKSB7CiAgICBsZXQgcGF0aCA9IHN0ZDo6ZW52OjphcmdzKCkubnRoKDEpLnVud3JhcCgpOwogICAgbGV0IGYgPSBGaWxlOjpvcGVuKCZwYXRoKS51bndyYXAoKTsKICAgIGxldCBtdXQgYSA9IHppcDo6WmlwQXJjaGl2ZTo6bmV3KGYpLnVud3JhcCgpOwogICAgbGV0IHRtcCA9IHN0ZDo6ZW52Ojp0ZW1wX2RpcigpLmpvaW4oInd0aS1wb2MtZXh0cmFjdCIpOwogICAgc3RkOjpmczo6Y3JlYXRlX2Rpcl9hbGwoJnRtcCkudW53cmFwKCk7CiAgICBhLmV4dHJhY3QoJnRtcCkudW53cmFwKCk7CiAgICBwcmludGxuISgiRVhUUkFDVEVEX1RPPXs6P30iLCB0bXApOwp9Cg=="))
           Push-Location extractor
           cargo build
           Pop-Location
